@@ -126,7 +126,7 @@ var cmds = {
 
     'status': (kws) => {
         let loc = locs[curloc];
-        echo('[INVENTORY:] ' + inventory, true);
+        echo('[INVENTORY:] ' + inventory.map(i => {return ' ' + items[i].label}), true);
         echo('[ENVIRONMENT READING:] ' + loc.label, true);
         echo(loc.description, true);
         
@@ -251,20 +251,15 @@ var cmds = {
         let obj = kws[3];  // ignore preposition in kws[2]
 
         // figure out what item this is
+        // check room items and inventory
         let ix = -1;
-        for (let i of loc.items) {
+        for (let i of loc.items.concat(inventory)) {
             if (item == items[i].label) {
                 ix = i;
                 break;
             }
         }
         if (ix == -1) {
-            echo('Name not recognized: ' + item);
-            return;
-        }
-
-        // check if item is in room or inventory
-        if (!inventory.includes(ix) && !loc.items.includes(ix)) {
             echo('Item not nearby or in storage module: ' + item);
             return;
         }
@@ -357,7 +352,6 @@ var cmds = {
 
         // remove from inventory
         inventory = inventory.filter(k => {return k != ix});
-        inventory.push(ix);
 
         // add to the room
         loc.items.push(ix);
