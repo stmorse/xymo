@@ -1,0 +1,37 @@
+/* :root {
+    --font: 'Courier New', sans-serif;
+} */
+
+* {
+    font-family: 'Courier New', sans-serif;
+    color: white;
+    background-color: black;
+}
+  
+#container {
+    border: 1px dashed white;
+    width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+#console {
+    white-space: pre-wrap;  /* allows \n and \t */
+    overflow-y: scroll;
+    border: 1px solid white;
+    padding: 10px;
+    text-align: left;
+    font-size: medium;
+    width: 95%;
+    height: 700px;
+}
+
+/* .terminal {
+    --size: 1.4;
+} */
+
+#footer {
+    text-align: center;
+    padding: 40px 20px;
+}
