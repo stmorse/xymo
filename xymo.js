@@ -18,9 +18,10 @@ close this terminal and contact authorities immediately. Type 'help' for help.
 `;
 
 const HELP = `Commands:
-status                  Print description of surroundings and rover status
+status                  Print description of surroundings
+inventory               List items in rover storage module
 enter -loc-             Enter -location-
-inspect -obj-           Conduct scan of -object- 
+inspect -obj-           Conduct detailed scan of -object- 
 use -item- on -obj-     Use -item- on nearby -object-
 stow -item-             Add -item- to storage module
 drop -item-             Remove -item- from storage module`;
@@ -57,6 +58,9 @@ var locs = {
         'description': 'Long room (30m), dimly lit. An unidentifiable object, that appears to be a non-human skeleton [Q-AI: 87% probability], is attached to the wall with an electron arc-chain.',
         'connections': [2],
         'items': []
+    },
+    4: {
+        'label': ''
     }
 };
 
@@ -124,9 +128,12 @@ var cmds = {
         echo(HELP);
     },
 
+    'inventory': (kws) => {
+        echo('[INVENTORY:] ' + inventory.map(i => {return ' ' + items[i].label}), true);
+    },
+
     'status': (kws) => {
         let loc = locs[curloc];
-        echo('[INVENTORY:] ' + inventory.map(i => {return ' ' + items[i].label}), true);
         echo('[ENVIRONMENT READING:] ' + loc.label, true);
         echo(loc.description, true);
         
