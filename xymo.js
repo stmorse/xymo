@@ -130,6 +130,7 @@ var cmds = {
 
     'inventory': (kws) => {
         echo('[INVENTORY:] ' + inventory.map(i => {return ' ' + items[i].label}), true);
+        echo('');
     },
 
     'status': (kws) => {
