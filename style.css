@@ -1,13 +1,37 @@
-/* :root {
-    --font: 'Courier New', sans-serif;
-} */
+:root {
+    --font: 'Courier New', monospace;
+    --bg: #000;
+    --fg: #ffffff;       /* neutral / unrecognized text          */
+    --out: #52CC7A;      /* system output                        */
+    --cmd: #E5C07B;      /* command verbs                        */
+    --noun: #56B6C2;     /* locations / objects / items          */
+    --ghost: #5c6370;    /* autocomplete suggestion              */
+    --prompt: #52CC7A;   /* the "> " prompt glyph                */
+    --glyph: #C678DD;    /* Architect glyphs / translated words  */
+    --amber: #E5C07B;    /* low power / Q-AI interjections        */
+    --red: #E06C75;      /* critical power                        */
+    --dim: #5c6370;      /* status-line chrome                    */
 
-* {
-    font-family: 'Courier New', sans-serif;
-    color: white;
-    background-color: black;
+    --fontsize: 16px;
+    --lineheight: 1.5;
 }
-  
+
+/* font-family on everything, but NOT color: a universal color rule would beat
+   inherited block colors on dynamically-created <span>s. Color is set on body
+   and inherited; .out / .cmd / .noun override via class specificity. */
+* {
+    box-sizing: border-box;
+    font-family: var(--font);
+}
+
+html, body {
+    margin: 0;
+    color: var(--fg);
+    background-color: var(--bg);
+}
+
+a { color: var(--fg); }
+
 #container {
     width: 900px;
     margin: 0 auto;
@@ -15,18 +39,113 @@
     text-align: center;
 }
 
-#console {
-    white-space: pre-wrap;  /* allows \n and \t */
-    overflow-y: scroll;
+/* the bordered terminal box: scrollback on top, input line pinned at bottom */
+#terminal {
+    display: flex;
+    flex-direction: column;
+    height: 700px;
+    width: 95%;
+    margin: 0 auto;
     border: 1px solid white;
     padding: 10px;
     text-align: left;
-    font-size: medium;
-    width: 95%;
-    height: 700px;
+    font-size: var(--fontsize);
+    line-height: var(--lineheight);
 }
+
+#scroll {
+    flex: 1 1 auto;
+    overflow-y: scroll;
+    white-space: pre-wrap;   /* honors \n and \t */
+}
+
+/* spacing between output blocks, mirroring the old double-newline feel */
+.block { margin-bottom: 1em; }
+.block:last-child { margin-bottom: 0; }
+
+.block.out { color: var(--out); }
+.block.raw { color: #ffffff; }            /* raw feed: stark, un-spun truth */
+.block.qai { color: var(--amber); }       /* Q-AI interjections / barks     */
+.cmd   { color: var(--cmd); }
+.noun  { color: var(--noun); }
+.glyph { color: var(--glyph); }
+.prompt { color: var(--prompt); }
+
+/* ---- status line ---- */
+
+#statusline {
+    flex: 0 0 auto;
+    color: var(--dim);
+    border-bottom: 1px solid var(--dim);
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#statusline .sl-id { color: var(--out); }
+#statusline .pwr { color: var(--out); }
+#statusline .pwr.low { color: var(--amber); }
+#statusline .pwr.crit { color: var(--red); }
+
+/* ---- input line ---- */
+
+#inputline {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 6px;
+}
+
+#prompt {
+    color: var(--prompt);
+    white-space: pre;
+}
+
+#inputwrap {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: calc(var(--fontsize) * var(--lineheight));
+}
+
+/* mirror (in flow, defines height) and textarea (overlaid) must match exactly */
+#mirror, #cmd {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: var(--font);
+    font-size: var(--fontsize);
+    line-height: var(--lineheight);
+    letter-spacing: normal;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    width: 100%;
+}
+
+#mirror {
+    min-height: calc(var(--fontsize) * var(--lineheight));
+}
+
+#cmd {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    color: transparent;        /* glyphs come from the mirror underneath */
+    caret-color: var(--fg);    /* but the caret stays visible            */
+    background: transparent;
+    resize: none;
+    overflow: hidden;
+    outline: none;
+}
+
+.ghost { color: var(--ghost); }
 
 #footer {
     text-align: center;
     padding: 40px 20px;
 }
+
+#footer a { text-decoration: underline; }
